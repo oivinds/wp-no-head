@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+  wordpress:
+    image: wp-no-head:0.1
+    build:
+      context: ./wp-build
+    container_name: wp_no
+    env_file: .env
+    ports:
+      - 9000:80
+    volumes:
+      - wp-no-data:/var/www/html/
+      - ./wp-content/:/var/www/html/wp-content/
+    restart: always
+  db:
+    image: mariadb:10.5.8
+    container_name: db_no
+    env_file: .env
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db-no-data:/var/lib/mysql
+      # - ./seed:/docker-entrypoint-initdb.d
+    restart: always
+  # phpmyadmin:´´
+  #   links:
+  #     - db
+  #   environment:
+  #     PMA_HOST: db
+  #     PMA_DB: xxxxx
+  #     PMA_ARBITRARY: 1
+  #   image: phpmyadmin:latest
+  #   container_name: pma_no
+  #   restart: always
+  #   ports:
+  #     - "7000:80"
+   
+volumes:
+  wp-no-data:
+    name: wp-no-data
+  db-no-data:
+    name: db-no-data
+networks:
+  default:
+    name: net_no
